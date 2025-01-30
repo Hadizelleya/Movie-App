@@ -7,7 +7,7 @@ import axios from "axios";
 import MovieCard from "./components/MovieCard";
 import Spinner from "./components/Spinner";
 import { useDebounce } from "react-use";
-import { updateSearchCount } from "./appwrite";
+import { getTrendingMovies, updateSearchCount } from "./appwrite";
 
 const MAIN_URL = "https://api.themoviedb.org/3";
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -18,6 +18,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [decouncedSearchTerm, setDecouncedSearchTerm] = useState("");
+  const [trendingMovies, setTrendingMovies] = useState([]);
 
   useDebounce(
     () => {
@@ -47,10 +48,21 @@ function App() {
     }
   };
 
+  const loadTrendingMovies = async () => {
+    try {
+      const movies = await getTrendingMovies();
+      setTrendingMovies(movies);
+    } catch (error) {
+      console.error(error);
+    }
+  };
   useEffect(() => {
     fetchMovies(decouncedSearchTerm);
   }, [decouncedSearchTerm]);
-  console.log(movies);
+
+  useEffect(() => {
+    loadTrendingMovies();
+  }, []);
   if (error) return <h1>something wrong have happened please try again</h1>;
 
   return (
@@ -74,8 +86,22 @@ function App() {
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
 
+        {trendingMovies.length > 0 && (
+          <section className="trending">
+            <h2>Trending Movies</h2>
+            <ul>
+              {trendingMovies.map((movie, index) => (
+                <li key={movie.$id}>
+                  <p>{index + 1}</p>
+                  <img src={movie.poster_url} alt={movie.title} />
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
         <section className="mt-15 ">
-          <h2 className="mt-[20px] text-center">All Movies</h2>
+          <h2 className=" text-center">All Movies</h2>
           <div className="all-movies mt-10">
             {loading ? (
               <div className="flex items-center justify-center mt-10">
