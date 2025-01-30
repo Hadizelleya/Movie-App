@@ -3,8 +3,10 @@ import logo from "../public/logo.png";
 import banner from "../public/hero.png";
 import search from "../public/search.svg";
 import "./App.css";
+import Search from "./components/Search";
 
 function App() {
+  const [searchTerm, setSearchTerm] = useState("");
   return (
     <main>
       <div className="pattern" />
@@ -24,14 +26,7 @@ function App() {
           </h1>
         </header>
 
-        <div className=" bg-dark-100 w-full flex flex-row px-4 gap-10 mt-15 rounded-xl">
-          <img src={search} alt="search" />
-          <input
-            type="text"
-            className="w-full p-4 text-white  placeholder:bg-dark-100 text-xl outline-none border-none"
-            placeholder="Search through 300+ movies online"
-          />
-        </div>
+        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
     </main>
   );
