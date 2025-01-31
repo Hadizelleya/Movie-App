@@ -77,6 +77,15 @@
     }
   }
 
+  .movie-details {
+    background-color: #0f0d23;
+    box-shadow: 5px 5px 150px #ab8bff4d;
+    @apply px-5 py-12 xs:p-10 mx-auto mt-20 flex flex-col relative z-10 rounded-2xl;
+  }
+
+  .movie-details .rating {
+    background-color: #221f3d;
+  }
   .search {
     @apply w-full bg-light-100/5 px-4 py-3 rounded-lg mt-10 max-w-3xl mx-auto;
 
@@ -159,4 +168,15 @@
   &::-webkit-scrollbar {
     display: none;
   }
+}
+
+.description {
+  color: #d6c7ff;
+}
+.genre {
+  background-color: #221f3d;
+}
+
+.homepage-button {
+  background: linear-gradient(to right, #d6c7ff, #ab8bff);
 }
