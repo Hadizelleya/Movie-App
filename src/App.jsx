@@ -8,6 +8,7 @@ import MovieCard from "./components/MovieCard";
 import Spinner from "./components/Spinner";
 import { useDebounce } from "react-use";
 import { getTrendingMovies, updateSearchCount } from "./appwrite";
+import Pagination from "./components/Pagination";
 
 export const MAIN_URL = "https://api.themoviedb.org/3";
 export const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
@@ -19,7 +20,7 @@ function App() {
   const [error, setError] = useState(null);
   const [decouncedSearchTerm, setDecouncedSearchTerm] = useState("");
   const [trendingMovies, setTrendingMovies] = useState([]);
-
+  const [page, setPage] = useState(1);
   useDebounce(
     () => {
       setDecouncedSearchTerm(searchTerm);
@@ -35,7 +36,7 @@ function App() {
         ? `${MAIN_URL}/search/movie?query=${encodeURIComponent(
             query
           )}&api_key=${API_KEY}`
-        : `${MAIN_URL}/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc`;
+        : `${MAIN_URL}/discover/movie?api_key=${API_KEY}&sort_by=popularity.desc&page=${page}`;
       const res = await axios.get(endpoint);
       setMovies(res?.data);
       setLoading(false);
@@ -58,7 +59,7 @@ function App() {
   };
   useEffect(() => {
     fetchMovies(decouncedSearchTerm);
-  }, [decouncedSearchTerm]);
+  }, [decouncedSearchTerm, page]);
 
   useEffect(() => {
     loadTrendingMovies();
@@ -118,6 +119,7 @@ function App() {
             )}
           </div>
         </section>
+        <Pagination page={page} pages={movies?.total_pages} setPage={setPage} />
       </div>
     </main>
   );
